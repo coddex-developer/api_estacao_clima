@@ -16,7 +16,7 @@ const protectedUser = {
             req.user = decoded;
             if (!req.user) {
                 return res.status(401).json({ message: 'Invalid token.' });
-            }        
+            }           
             next();
         } catch (error) {
             console.error(error);
