@@ -30,6 +30,6 @@ route.put("/dashboard/edit_product/:id", protectedUser.defender, productsControl
 route.delete("/dashboard/delete_product/:id", protectedUser.defender, productsController.deleteProduct);
 
 // GET Rota de listagem dos produtos
-route.get("/dashboard/products", protectedUser.defender, productsController.getProducts);
+route.get("/dashboard/all_products", protectedUser.defender, productsController.getProducts);
 
 export default route;

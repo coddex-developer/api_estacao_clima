@@ -1,7 +1,9 @@
 import { v4 as uuid } from 'uuid';
 import myProducts from '../models/myProducts.js';
 
-
+function categoryExists(categoria) {
+    return myProducts.find(product => product.nome === categoria);
+}
 
 const productsController = {
     getProducts: (req, res) => {
@@ -15,6 +17,9 @@ const productsController = {
         const { nome } = req.body;
         if (!nome) {
             return res.status(400).json({ message: 'Category name is required' });
+        }
+        if (categoryExists(nome)) {
+            return res.status(400).json({ message: 'Category already exists' });
         }
         const newCategory = { id: uuid(), nome };
         myProducts.push(newCategory);
