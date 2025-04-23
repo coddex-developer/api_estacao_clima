@@ -1,9 +1,11 @@
 import { v4 as uuid } from 'uuid';
-import { myProducts } from '../models/products.js';
+import myProducts from '../models/myProducts.js';
+
+
 
 const productsController = {
     getProducts: (req, res) => {
-        if(myProducts.length === 0) {
+        if (myProducts.length === 0) {
             return res.status(404).json({ message: 'No products found' });
         }
         return res.status(200).json(myProducts);
