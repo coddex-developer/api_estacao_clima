@@ -16,7 +16,7 @@ const productsController = {
     },
 
     getCategory: (req, res) => {
-        
+
         return res.status(200).json(categoryes);
     },
 
@@ -61,21 +61,22 @@ const productsController = {
 
     createProduct: (req, res) => {
         const { categoria, imagem, nome, informacao, preco } = req.body;
+
         if (!categoria || !nome || !informacao || !preco) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
-        const newProduct = { id: uuid(), categoria, imagem, nome, informacao, preco };
+        const categoryIndex = categoryes.findIndex(category => category.nome == categoria);
 
-        const categoryIndex = categoryes.findIndex(category => category.nome === categoria);
-        
         if (categoryIndex === -1) {
-            return res.status(404).json({ message: 'Category not found' });
+            return res.status(404).json({ message: `Category ${categoria} not found!` });
         }
 
         const category = categoryes[categoryIndex];
+        const newProduct = { id: uuid(), categoria, imagem, nome, informacao, preco };
+
         category.myProducts.push(newProduct);
-        return res.status(201).json({ message: 'Product created successfully', newProduct });
+        return res.status(201).json({ message: `Product ${newProduct.nome} created successfully`});
     },
 
     editProduct: (req, res) => {
