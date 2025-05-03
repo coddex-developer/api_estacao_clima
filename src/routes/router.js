@@ -11,6 +11,9 @@ route.post('/login', adminController.authUser);
 // GET Rota dashboard
 route.get('/dashboard', protectedUser.defender, adminController.adminDashboard);
 
+// GET Rota de listagem de categorias
+route.get('/dashboard/categoryes', protectedUser.defender, productsController.getCategory);
+
 // POST Rota de criação de uma categoria
 route.post("/dashboard/new_category", protectedUser.defender, productsController.createCategory);
 
