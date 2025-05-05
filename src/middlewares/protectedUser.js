@@ -15,12 +15,11 @@ const protectedUser = {
             const decoded = jwt.verify(token, process.env.SECRETKEY);
             req.user = decoded;
             if (!req.user) {
-                return res.status(401).json({ message: 'Invalid token.' });
+                return res.status(401).json({ message: 'Token inválido' });
             }           
             next();
         } catch (error) {
-            console.error(error);
-            return res.status(403).json({ message: 'Invalid or expired token.' });
+            return res.status(403).json({ message: 'Tempo de acesso expirado!' });
         }
     }
 };

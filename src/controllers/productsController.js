@@ -7,12 +7,15 @@ function categoryExists(categoria) {
 
 const productsController = {
     getProducts: (req, res) => {
-        const { categoria } = req.query;
-        if (categoria) {
-            const filteredProducts = categoryes.myProducts.filter(product => product.categoria === categoria);
-            return res.status(200).json(filteredProducts);
+        const  { id } = req.params;
+        const categoryIndex = categoryes.findIndex(category => category.id === id);
+        if (categoryIndex === -1) {
+            return res.status(404).json({ message: 'Category not found' });
         }
-        return res.status(200).json(categoryes.myProducts);
+        const category = categoryes[categoryIndex];
+
+        const productBox = categoryes[categoryIndex].myProducts
+        return res.status(200).json(productBox);
     },
 
     getCategory: (req, res) => {
