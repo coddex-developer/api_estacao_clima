@@ -30,7 +30,7 @@ route.post("/dashboard/new_product", protectedUser.defender, productsController.
 route.put("/dashboard/edit_product/:id", protectedUser.defender, productsController.editProduct);
 
 // DELETE Rota de deletar um produto
-route.delete("/dashboard/delete_product/:id", protectedUser.defender, productsController.deleteProduct);
+route.delete("/dashboard/view_categories/:id/view_products/:idDelete", protectedUser.defender, productsController.deleteProduct);
 
 // GET Rota de listagem dos produtos
 route.get("/dashboard/view_categories/:id/view_products", protectedUser.defender, productsController.getProducts);

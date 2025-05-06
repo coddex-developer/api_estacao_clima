@@ -116,25 +116,19 @@ const productsController = {
     },
 
     deleteProduct: (req, res) => {
-        const { id } = req.params;
-        const productIndex = myProducts.findIndex(product => product.id === id);
-        if (productIndex === -1) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-        const deletedProduct = myProducts[productIndex];
-        myProducts.splice(productIndex, 1);
-        const categoryIndex = categoryes.findIndex(category => category.nome === deletedProduct.categoria);
+        const { id, idDelete } = req.params;
+
+        const categoryIndex = categoryes.findIndex(category => category.id === id);
         if (categoryIndex === -1) {
-            return res.status(404).json({ message: 'Category not found' });
+            return res.status(404).json({ message: 'Categoria não encontrada!' });
         }
-        const category = categoryes[categoryIndex];
-        const productInCategoryIndex = category.myProducts.findIndex(product => product.id === id);
-        if (productInCategoryIndex !== -1) {
-            category.myProducts.splice(productInCategoryIndex, 1);
-        } else {
-            return res.status(404).json({ message: 'Product not found in category' });
+
+        const productIndex = categoryes[categoryIndex].myProducts.find(product => product.id === idDelete); 
+        if (productIndex === -1) {
+            return res.status(404).json({ message: 'Produto não encontrado!' });
         }
-        return res.status(200).json({ message: 'Product deleted successfully', deletedProduct });
+        categoryes[categoryIndex].myProducts.splice(productIndex, 1);
+        res.status(200).json({ message: 'Produto excluído com sucesso!' });
     }
 }
 
