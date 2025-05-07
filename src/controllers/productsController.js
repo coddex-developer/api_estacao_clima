@@ -123,7 +123,7 @@ const productsController = {
             return res.status(404).json({ message: 'Categoria não encontrada!' });
         }
 
-        const productIndex = categoryes[categoryIndex].myProducts.find(product => product.id === idDelete); 
+        const productIndex = categoryes[categoryIndex].myProducts.findIndex(product => product.id === idDelete); 
         if (productIndex === -1) {
             return res.status(404).json({ message: 'Produto não encontrado!' });
         }
