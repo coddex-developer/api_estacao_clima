@@ -39,17 +39,27 @@ const productsController = {
 
     editCategory: (req, res) => {
         const { id } = req.params;
-        const { nome } = req.body;
+        const { categoria } = req.body;
+    
+        if (!categoria) {
+            return res.status(400).json({ message: 'Preencha o campo corretamente!' });
+        }
+    
         const categoryIndex = categoryes.findIndex(category => category.id === id);
-        if (!nome) {
-            return res.status(400).json({ message: 'Category name is required' });
-        }
         if (categoryIndex === -1) {
-            return res.status(404).json({ message: 'Category not found' });
+            return res.status(404).json({ message: 'Categoria não encontrada' });
         }
-        const updatedCategory = { ...categoryes[categoryIndex], nome };
-        categoryes[categoryIndex] = updatedCategory;
-        return res.status(200).json({ message: 'Category updated successfully', updatedCategory });
+    
+        categoryes[categoryIndex].nome = categoria;
+        categoryes[categoryIndex].myProducts = categoryes[categoryIndex].myProducts.map(product => ({
+            ...product,
+            categoria
+        }));
+    
+        return res.status(200).json({ 
+            message: 'Categoria atualizada com sucesso!', 
+            updatedCategory: categoryes[categoryIndex] 
+        });
     },
 
     deleteCategory: (req, res) => {
