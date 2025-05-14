@@ -93,14 +93,14 @@ const productsController = {
     },
 
     editProduct: (req, res) => {
-        const { id } = req.params;
+        const { idProduct } = req.params;
         const { categoria, imagem, nome, informacao, preco } = req.body;
 
         if (!categoria || !nome || !informacao || !preco) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
-        const productIndex = myProducts.findIndex(product => product.id === id);
+        const productIndex = myProducts.findIndex(product => product.id === idProduct);
         if (productIndex === -1) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -113,7 +113,7 @@ const productsController = {
             return res.status(404).json({ message: 'Category not found' });
         }
         const category = categoryes[categoryIndex];
-        const productInCategoryIndex = category.myProducts.findIndex(product => product.id === id);
+        const productInCategoryIndex = category.myProducts.findIndex(product => product.id === idProduct);
 
         if (productInCategoryIndex !== -1) {
             category.myProducts[productInCategoryIndex] = updatedProduct;
