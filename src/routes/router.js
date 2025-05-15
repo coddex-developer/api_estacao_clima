@@ -26,8 +26,11 @@ route.delete("/dashboard/delete_category/:id", protectedUser.defender, productsC
 // POST Rota de criação de um produto
 route.post("/dashboard/new_product", protectedUser.defender, productsController.createProduct);
 
+// GET Rota de listagem de um produto
+route.get("/dashboard/view_categories/:id/:idProduct", protectedUser.defender, productsController.getProductById);
+
 // PUT Rota de edição de um produto
-route.put("/dashboard/new_category/:id/:idProduct", protectedUser.defender, productsController.editProduct);
+route.put("/dashboard/view_categories/:id/:idProduct/update", protectedUser.defender, productsController.editProduct);
 
 // DELETE Rota de deletar um produto
 route.delete("/dashboard/view_categories/:id/:idDelete", protectedUser.defender, productsController.deleteProduct);

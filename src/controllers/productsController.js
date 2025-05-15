@@ -7,7 +7,7 @@ function categoryExists(categoria) {
 
 const productsController = {
     getProducts: (req, res) => {
-        const  { id } = req.params;
+        const { id } = req.params;
         const categoryIndex = categoryes.findIndex(category => category.id === id);
         if (categoryIndex === -1) {
             return res.status(404).json({ message: 'Category not found' });
@@ -40,25 +40,25 @@ const productsController = {
     editCategory: (req, res) => {
         const { id } = req.params;
         const { categoria } = req.body;
-    
+
         if (!categoria) {
             return res.status(400).json({ message: 'Preencha o campo corretamente!' });
         }
-    
+
         const categoryIndex = categoryes.findIndex(category => category.id === id);
         if (categoryIndex === -1) {
             return res.status(404).json({ message: 'Categoria não encontrada' });
         }
-    
+
         categoryes[categoryIndex].nome = categoria;
         categoryes[categoryIndex].myProducts = categoryes[categoryIndex].myProducts.map(product => ({
             ...product,
             categoria
         }));
-    
-        return res.status(200).json({ 
-            message: 'Categoria atualizada com sucesso!', 
-            updatedCategory: categoryes[categoryIndex] 
+
+        return res.status(200).json({
+            message: 'Categoria atualizada com sucesso!',
+            updatedCategory: categoryes[categoryIndex]
         });
     },
 
@@ -89,40 +89,53 @@ const productsController = {
         const newProduct = { id: uuid(), categoria, imagem, nome, informacao, preco };
 
         category.myProducts.push(newProduct);
-        return res.status(201).json({ message: `Product ${newProduct.nome} created successfully`});
+        return res.status(201).json({ message: `Product ${newProduct.nome} created successfully` });
     },
 
     editProduct: (req, res) => {
         const { idProduct } = req.params;
-        const { categoria, imagem, nome, informacao, preco } = req.body;
+        const { imagem, nome, informacao, preco } = req.body;
 
-        if (!categoria || !nome || !informacao || !preco) {
+        if (!nome || !informacao || !preco) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
-        const productIndex = myProducts.findIndex(product => product.id === idProduct);
-        if (productIndex === -1) {
-            return res.status(404).json({ message: 'Product not found' });
+        let found = false;
+        for (let category of categoryes) {
+            const productIndex = category.myProducts.findIndex(product => product.id === idProduct);
+            if (productIndex !== -1) {
+                const updatedProduct = {
+                    ...category.myProducts[productIndex],
+                    imagem,
+                    nome,
+                    informacao,
+                    preco
+                };
+                category.myProducts[productIndex] = updatedProduct;
+                found = true;
+                return res.status(200).json({ message: 'Produto atualizado com sucesso!', updatedProduct });
+            }
         }
 
-        const updatedProduct = { ...myProducts[productIndex], categoria, imagem, nome, informacao, preco };
-        myProducts[productIndex] = updatedProduct;
-
-        const categoryIndex = categoryes.findIndex(category => category.nome === categoria);
-        if (categoryIndex === -1) {
-            return res.status(404).json({ message: 'Category not found' });
+        if (!found) {
+            return res.status(404).json({ message: 'Produto não encontrado!' });
         }
-        const category = categoryes[categoryIndex];
-        const productInCategoryIndex = category.myProducts.findIndex(product => product.id === idProduct);
+    },
 
-        if (productInCategoryIndex !== -1) {
-            category.myProducts[productInCategoryIndex] = updatedProduct;
-        } else {
-            return res.status(404).json({ message: 'Product not found in category' });
+    getProductById: (req, res) => {
+        const { id, idProduct } = req.params;
+
+        const category = categoryes.find(category => category.id === id);
+        if (!category) {
+            return res.status(404).json({ message: 'Categoria não encontrada' });
         }
 
-        return res.status(200).json({ message: 'Product updated successfully', updatedProduct });
+        const product = category.myProducts.find(product => product.id === idProduct);
+        if (!product) {
+            return res.status(404).json({ message: 'Produto não encontrado' });
+        }
 
+        return res.status(200).json(product);
     },
 
     deleteProduct: (req, res) => {
@@ -133,7 +146,7 @@ const productsController = {
             return res.status(404).json({ message: 'Categoria não encontrada!' });
         }
 
-        const productIndex = categoryes[categoryIndex].myProducts.findIndex(product => product.id === idDelete); 
+        const productIndex = categoryes[categoryIndex].myProducts.findIndex(product => product.id === idDelete);
         if (productIndex === -1) {
             return res.status(404).json({ message: 'Produto não encontrado!' });
         }
